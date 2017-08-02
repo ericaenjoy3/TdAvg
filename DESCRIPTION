@@ -1,13 +1,15 @@
 Package: TdAvg
-Title: What the Package Does (one line, title case)
-Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Title: Tornado and Average Plots of Coverage Signals Centered on Peaks
+Version: 0.0.0.9
+Authors: Erica Liu
+Maintainer: Erica LIu <ericaenjoy3@yahoo.co.uk>
+Description: Perform tornado and average plots of coverage signals generated using bwtools matrix.
 Depends: R (>= 3.4.0)
-License: What license is it under?
+Imports: ClusterR, ComplexHeatmap, EnrichedHeatmap, RColorBrewer, ggplot2, dplyr, rlang, grDevices, multiplot
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Collate: 
+Collate:
     'ClusterR_Optimal_Clusters_KMeans.R'
     'TdAvgClass.R'
     'TdAvgConst.R'

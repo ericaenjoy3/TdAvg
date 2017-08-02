@@ -5,6 +5,7 @@
 #' @import RColorBrewer
 #' @import ggplot2
 #' @import dplyr
+#' @import multiplot
 #' @importFrom rlang .data
 #' @importFrom grDevices dev.off png
 

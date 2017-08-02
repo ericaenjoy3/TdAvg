@@ -1,5 +1,16 @@
 # Modidified from ClusterR::Optimal_Clusters_KMeans
-
+#' @title Find the optimal number of kmeans clusters
+#' @name Optimal_Clusters_KM
+#' @rdname Optimal_Clusters_KM-methods
+#' @description
+#' Find the optimal number of kmeans clusters
+#' by supplying data (matrix or data.frame), and
+#' specifying max_clusters (the maximum number of clusters).
+#' The function plots the optimal cluster number plot and returns cluster membership (integers).
+#' @param data matrix or data.frame object
+#' @param max_clusters numeric/integer vector of length 1
+#' @return cluster membership integer vector
+#' @export Optimal_Clusters_KM
 Optimal_Clusters_KM <- function (data, max_clusters, criterion = "variance_explained",
     fK_threshold = 0.85, num_init = 1, max_iters = 200, initializer = "optimal_init",
     threads = 1, tol = 1e-04, plot_clusters = TRUE, verbose = FALSE,
