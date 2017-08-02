@@ -1,7 +1,7 @@
 Package: TdAvg
 Title: Tornado and Average Plots of Coverage Signals Centered on Peaks
 Version: 0.0.0.9
-Authors: Erica Liu
+Author: Erica Liu
 Maintainer: Erica LIu <ericaenjoy3@yahoo.co.uk>
 Description: Perform tornado and average plots of coverage signals generated using bwtools matrix.
 Depends: R (>= 3.4.0)
