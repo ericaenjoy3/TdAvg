@@ -1,0 +1,119 @@
+#' @include TdAvgClass.R
+#' @export orderClus
+setGeneric(name="orderClus",
+  def=function(obj,orderconfig){
+    standardGeneric("orderClus")
+  }
+)
+
+#' @export appendInfo
+setGeneric(name="appendInfo",
+  def=function(obj,w,s){
+    standardGeneric("appendInfo")
+  }
+)
+
+#' @export returnIntIdx
+setGeneric(name="returnIntIdx",
+  def=function(obj){
+    standardGeneric("returnIntIdx")
+  }
+)
+
+#' @export subsetbyIntIdx
+setGeneric(name="subsetbyIntIdx",
+  def=function(obj,IntIdx){
+    standardGeneric("subsetbyIntIdx")
+  }
+)
+
+#' @export subsetbyBoolIdx
+setGeneric(name="subsetbyBoolIdx",
+  def=function(obj,BoolIdx){
+    standardGeneric("subsetbyBoolIdx")
+  }
+)
+
+#' @export orderbyIntIdx
+setGeneric(name="orderbyIntIdx",
+  def=function(obj,IntIdx){
+    standardGeneric("orderbyIntIdx")
+  }
+)
+
+#' @export rmSmallClus
+setGeneric(name="rmSmallClus",
+  def=function(info.obj,chip.obj){
+    standardGeneric("rmSmallClus")
+  }
+)
+
+#' @export outliers
+setGeneric(name="outliers",
+  def=function(info.obj,chip.obj,matlist.obj){
+    standardGeneric("outliers")
+  }
+)
+
+#' @export updateClus
+setGeneric(name="updateClus",
+  def=function(chip.obj,IntIdx,subclus) {
+    standardGeneric("updateClus")
+  }
+)
+
+#' @export clusterR
+setGeneric(name="clusterR",
+  def=function(chip.obj,info.obj,matlist.obj,nms){
+    standardGeneric("clusterR")
+  }
+)
+
+#' @export reord
+setGeneric(name="reord",
+  def=function(info.obj,chip.obj,matlist.obj){
+    standardGeneric("reord")
+  }
+)
+
+#' @export updateChip
+setGeneric(name="updateChip",
+  def=function(chip.obj,info.obj){
+    standardGeneric("updateChip")
+  }
+)
+
+#' @export updateMatlist
+setGeneric(name="updateMatlist",
+  def=function(matlist.obj,info.obj) {
+    standardGeneric("updateMatlist")
+  }
+)
+
+#' @export writeChip
+setGeneric(name="writeChip",
+  def=function(chip.obj,fout) {
+    standardGeneric("writeChip")
+  }
+)
+
+#' @export mergeRep
+setGeneric(name="mergeRep",
+  def=function(matlist.obj,repconfig){
+    standardGeneric("mergeRep")
+  }
+)
+
+#' @export avgplot
+setGeneric(name="avgplot",
+  def=function(matlist.obj, chip.obj, info.obj, pngfoutFe, pngfoutSm) {
+    standardGeneric("avgplot")
+  }
+)
+
+#' @export tdplot
+setGeneric(name="tdplot",
+  def=function(matlist.obj, chip.obj, info.obj, pngfout) {
+    standardGeneric("tdplot")
+  }
+)
