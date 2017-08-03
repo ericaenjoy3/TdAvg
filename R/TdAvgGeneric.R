@@ -251,12 +251,12 @@ setGeneric(name="mergeRep",
 #' @param matlist.obj A \code{matlist} object
 #' @param chip.obj A \code{chip} object
 #' @param info.obj An \code{info} object
-#' @param pngfoutFe An png graph of average plot stratified by clusters
-#' @param pngfoutSm An png graph of average plot stratified by individual/groupled samples
+#' @param pdffoutFe An pdf graph of average plot stratified by clusters
+#' @param pdffoutSm An pdf graph of average plot stratified by individual/groupled samples
 #' @return No object
 #' @export avgplot
 setGeneric(name="avgplot",
-  def=function(matlist.obj, chip.obj, info.obj, pngfoutFe, pngfoutSm) {
+  def=function(matlist.obj, chip.obj, info.obj, pdffoutFe, pdffoutSm) {
     standardGeneric("avgplot")
   }
 )
@@ -268,11 +268,11 @@ setGeneric(name="avgplot",
 #' @param matlist.obj A \code{matlist} object
 #' @param chip.obj A \code{chip} object
 #' @param info.obj An \code{info} object
-#' @param pngfout An output png file for the tornado plot
+#' @param pdffout An output pdf file for the tornado plot
 #' @return No object
 #' @export tdplot
 setGeneric(name="tdplot",
-  def=function(matlist.obj, chip.obj, info.obj, pngfout) {
+  def=function(matlist.obj, chip.obj, info.obj, pdffout) {
     standardGeneric("tdplot")
   }
 )

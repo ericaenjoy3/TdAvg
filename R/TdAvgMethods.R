@@ -117,7 +117,7 @@ setMethod(f="clusterR",
     clus.list<-lapply(seq_along(mat.list),
       function(i,nms){
         mat<-mat.list[[i]]
-        png(paste0(nms,"_",names(mat.list)[i],".png"),height=1000,width=1000,res=300)
+        pdf(paste0(nms,"_",names(mat.list)[i],".pdf"))
         opt<-Optimal_Clusters_KM(mat, max_clusters = min(10,ncol(mat)), plot_clusters=TRUE,criterion = 'distortion_fK', fK_threshold = 0.85,initializer = 'optimal_init', tol_optimal_init = 0.2)
         dev.off()
         km_mb<-MiniBatchKmeans(mat, clusters = opt, batch_size = 20, num_init = 5, max_iters = 100,
@@ -197,7 +197,7 @@ setMethod(f="mergeRep",
 #' @rdname avgplot-methods
 setMethod(f="avgplot",
   signature=c("matlist","chip","info"),
-  definition=function(matlist.obj, chip.obj, info.obj, pngfoutFe, pngfoutSm){
+  definition=function(matlist.obj, chip.obj, info.obj, pdffoutFe, pdffoutSm){
     size <- info.obj@w
     axis_name <- if (floor(size/1000)>0) {
         c(paste0("-",size/1000," kb"),"0",paste0(size/1000," kb"))
@@ -217,12 +217,12 @@ setMethod(f="avgplot",
     setnames(avg, c("grp","sm",dist) )
     avg <- melt(avg,id.vars=c("grp","sm"))
     avg$variable <- as.numeric(as.character(avg$variable))
-    png(pngfoutFe,width=max(3000,800*length(unique(as.character(avg$grp)))),height=3000,res=300)
+    pdf(pdffoutFe)
     theme_set(theme_grey(base_size=15))
     p1 <- ggplot(avg, aes_(x = ~variable, y = ~value, color = ~sm)) + geom_line(size=2)+labs(x = "",y = matlist.obj@ylab)+scale_x_continuous(breaks = c(-size,0,size), labels = axis_name)+theme(legend.title = element_blank(), panel.spacing = unit(2, "lines"), legend.position = "top")+facet_grid(.~grp)
     multiplot(p1,cols = 1)
     dev.off()
-    png(pngfoutSm,width=max(3000,800*length(unique(as.character(avg$sm)))),height=3000,res=300)
+    pdf(pdffoutSm)
     theme_set(theme_grey(base_size=15))
     p1 <- ggplot(avg, aes_(x = ~variable, y = ~value, color = ~grp)) + geom_line(size=2)+labs(x="",y = matlist.obj@ylab)+scale_x_continuous(breaks=c(-size, 0, size), labels = axis_name)+theme(legend.title = element_blank(),panel.spacing = unit(2, "lines"),legend.position = "top")+facet_grid(.~sm)
     multiplot(p1,cols = 1)
@@ -233,7 +233,7 @@ setMethod(f="avgplot",
 #' @rdname tdplot-method
 setMethod(f="tdplot",
   signature=c("matlist","chip","info"),
-  def=function(matlist.obj, chip.obj, info.obj, pngfout) {
+  def=function(matlist.obj, chip.obj, info.obj, pdffout) {
     size<-info.obj@w
     axis_name<- if (floor(size/1000)>0) {
         c(paste0("-",size/1000," kb"),"0",paste0(size/1000," kb"))
@@ -267,7 +267,7 @@ setMethod(f="tdplot",
   c("white", "red")), name=names(sml)[j], column_title=names(sml)[j], axis_name=axis_name,heatmap_legend_param = list(color_bar="continuous"))
       }
     }
-    png(pngfout,width=max(3000,700*length(sml)),height=3000,res=300)
+    pdf(pdffout)
     draw(ht_list)
     dev.off()
   }
