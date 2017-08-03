@@ -5,12 +5,11 @@ Author: Erica Liu
 Maintainer: Erica LIu <ericaenjoy3@yahoo.co.uk>
 Description: Perform tornado and average plots of coverage signals generated using bwtools matrix.
 Depends: R (>= 3.4.0)
-Imports: ClusterR, ComplexHeatmap, EnrichedHeatmap, RColorBrewer, ggplot2, dplyr, rlang, grDevices, multiplot
+Imports: ModClusterR, ComplexHeatmap, EnrichedHeatmap, RColorBrewer, ggplot2, dplyr, rlang, grDevices, multiplot, circlize, methods, data.table
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Collate:
-    'ClusterR_Optimal_Clusters_KMeans.R'
+Collate: 
     'TdAvgClass.R'
     'TdAvgConst.R'
     'TdAvgGeneric.R'

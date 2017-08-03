@@ -20,3 +20,6 @@ appendInfo(obj, w, s)
 \value{
 An updated \code{info} object
 }
+\description{
+append width and step size to an \code{info} object
+}

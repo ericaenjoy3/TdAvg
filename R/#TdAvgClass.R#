@@ -1,3 +1,4 @@
+
 #####rlang .data prevents R CMD check from giving a NOTE about undefined global variables
 #' @import ModClusterR
 #' @import RColorBrewer

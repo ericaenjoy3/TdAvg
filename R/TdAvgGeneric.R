@@ -16,6 +16,7 @@ setGeneric(name="orderClus",
 #' @title append width and step size to an \code{info} object
 #' @name appendInfo
 #' @rdname appendInfo-methods
+#' @description append width and step size to an \code{info} object
 #' @param obj An \code{info} object.
 #' @param w The flanking window size in basepairs (integer).
 #' @param s The step size for coverage value sampled (integer).

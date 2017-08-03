@@ -67,7 +67,7 @@ setMethod(f="rmSmallClus",
     ori.idx<-returnIntIdx(info.obj)
     dat<-data.table(chip.obj@bed[,4][ori.idx,])
     setnames(dat,"grp")
-    int.idx<-dat[,.I[.N>1000],by=grp]$V1
+    int.idx<-dat[,.I[.N>1000],by=.data$grp]$V1
     info.obj<-subsetbyIntIdx(info.obj,int.idx)
     validObject(info.obj)
     return(info.obj)
@@ -120,9 +120,9 @@ setMethod(f="clusterR",
         png(paste0(nms,"_",names(mat.list)[i],".png"),height=1000,width=1000,res=300)
         opt<-Optimal_Clusters_KM(mat, max_clusters = min(10,ncol(mat)), plot_clusters=TRUE,criterion = 'distortion_fK', fK_threshold = 0.85,initializer = 'optimal_init', tol_optimal_init = 0.2)
         dev.off()
-        km_mb<-ClusterR::MiniBatchKmeans(mat, clusters = opt, batch_size = 20, num_init = 5, max_iters = 100,
+        km_mb<-MiniBatchKmeans(mat, clusters = opt, batch_size = 20, num_init = 5, max_iters = 100,
         init_fraction = 0.2, initializer = 'kmeans++', early_stop_iter = 10,verbose = F)
-        pr_mb<-ClusterR::predict_MBatchKMeans(mat, km_mb$centroids)
+        pr_mb<-predict_MBatchKMeans(mat, km_mb$centroids)
         return(paste(names(mat.list)[i],pr_mb,sep="_"))
       },nms=nms)
     clus<-factor(unsplit(clus.list,group))
@@ -219,12 +219,12 @@ setMethod(f="avgplot",
     avg$variable <- as.numeric(as.character(avg$variable))
     png(pngfoutFe,width=max(3000,800*length(unique(as.character(avg$grp)))),height=3000,res=300)
     theme_set(theme_grey(base_size=15))
-    p1 <- ggplot(avg, aes(x = variable, y = value, color = sm)) + geom_line(size=2)+labs(x = "",y = matlist.obj@ylab)+scale_x_continuous(breaks = c(-size,0,size), labels = axis_name)+theme(legend.title = element_blank(), panel.spacing = unit(2, "lines"), legend.position = "top")+facet_grid(.~grp)
+    p1 <- ggplot(avg, aes(x = .data$variable, y = .data$value, color = .data$sm)) + geom_line(size=2)+labs(x = "",y = matlist.obj@ylab)+scale_x_continuous(breaks = c(-size,0,size), labels = axis_name)+theme(legend.title = element_blank(), panel.spacing = unit(2, "lines"), legend.position = "top")+facet_grid(.~.data$grp)
     multiplot(p1,cols = 1)
     dev.off()
     png(pngfoutSm,width=max(3000,800*length(unique(as.character(avg$sm)))),height=3000,res=300)
     theme_set(theme_grey(base_size=15))
-    p1 <- ggplot(avg, aes(x = variable, y = value, color = grp)) + geom_line(size=2)+labs(x="",y = matlist.obj@ylab)+scale_x_continuous(breaks=c(-size, 0, size), labels = axis_name)+theme(legend.title = element_blank(),panel.spacing = unit(2, "lines"),legend.position = "top")+facet_grid(.~sm)
+    p1 <- ggplot(avg, aes(x = .data$variable, y = .data$value, color = .data$grp)) + geom_line(size=2)+labs(x="",y = matlist.obj@ylab)+scale_x_continuous(breaks=c(-size, 0, size), labels = axis_name)+theme(legend.title = element_blank(),panel.spacing = unit(2, "lines"),legend.position = "top")+facet_grid(.~.data$sm)
     multiplot(p1,cols = 1)
     dev.off()
   }
@@ -240,30 +240,30 @@ setMethod(f="tdplot",
     } else if (size>0) {
         c(paste0("-",size," bp"),"0",paste0(size," bp"))
     }
-    thresh=as.numeric(quantile(unlist(matlist.obj@ll),0.95))
-    sml=lapply(matlist.obj@ll,function(mat){mat[mat<0]=0;
+    thresh <- as.numeric(quantile(unlist(matlist.obj@ll),0.95))
+    sml <- lapply(matlist.obj@ll,function(mat){mat[mat<0]=0;
       mat[mat>thresh]=thresh;
-      attr(mat,"extend")=0;
-      attr(mat, "upstream_index")=1:round(ncol(mat)/2);
-      attr(mat, "downstream_index")=(round(ncol(mat)/2)+1):ncol(mat);
-      attr(mat, "target_index")=integer(0);
+      attr(mat,"extend") <- 0;
+      attr(mat, "upstream_index") <- 1:round(ncol(mat)/2);
+      attr(mat, "downstream_index") <- (round(ncol(mat)/2)+1):ncol(mat);
+      attr(mat, "target_index") <- integer(0);
       return(mat)})
-    names(sml)=names(matlist.obj@ll)
-    grp=chip.obj@bed[,4]
+    names(sml) <- names(matlist.obj@ll)
+    grp <- chip.obj@bed[,4]
     options(expressions=500000)
     if (length(unique(as.character(grp)))==1) {
-      ht_list=NULL
+      ht_list <- NULL
     } else {
-      col1=if(length(levels(grp))<3) {brewer.pal(3, "Dark2")[1:2]} else if (length(levels(grp))>8) {brewer.pal(length(levels(grp)), "Paired")} else {brewer.pal(length(levels(grp)), "Dark2")}
-      ht_list=ComplexHeatmap::Heatmap(as.character(grp), col=structure(col1,names=levels(grp)), name="Groups", show_row_names=FALSE, show_column_names=FALSE, width=unit(3, "mm"),use_raster=FALSE,show_row_dend=FALSE,show_column_dend=FALSE,split=grp,combined_name_fun=NULL)
+      col1 <- if(length(levels(grp))<3) {brewer.pal(3, "Dark2")[1:2]} else if (length(levels(grp))>8) {brewer.pal(length(levels(grp)), "Paired")} else {brewer.pal(length(levels(grp)), "Dark2")}
+      ht_list <- Heatmap(as.character(grp), col = structure(col1,names = levels(grp)), name = "Groups", show_row_names = FALSE, show_column_names = FALSE, width = unit(3, "mm"),use_raster = FALSE,show_row_dend = FALSE,show_column_dend = FALSE, split = grp, combined_name_fun = NULL)
     }
     rng=range(unlist(sml))
     for (j in 1:length(sml)) {
       if (j==1) {
-        ht_list=ht_list+EnrichedHeatmap(sml[[j]], col=circlize::colorRamp2(c(rng[1],rng[2]),
+        ht_list <- ht_list + EnrichedHeatmap(sml[[j]], col=colorRamp2(c(rng[1],rng[2]),
   c("white", "red")), name=names(sml)[j], split=as.numeric(grp), row_title_rot=0,column_title=names(sml)[j], combined_name_fun=NULL, axis_name=axis_name,heatmap_legend_param = list(color_bar="continuous"))
       } else {
-        ht_list=ht_list+EnrichedHeatmap(sml[[j]], col=circlize::colorRamp2(c(rng[1],rng[2]),
+        ht_list=ht_list+EnrichedHeatmap(sml[[j]], col=colorRamp2(c(rng[1],rng[2]),
   c("white", "red")), name=names(sml)[j], column_title=names(sml)[j], axis_name=axis_name,heatmap_legend_param = list(color_bar="continuous"))
       }
     }
