@@ -10,7 +10,7 @@
 #' @importFrom grDevices dev.off png
 #' @importFrom stats na.omit quantile median
 #' @importFrom graphics plot axis abline text par mtext
-#' @importFrom ComplexHeatmap Heatmap draw
+#' @importFrom ComplexHeatmap Heatmap draw AdditiveUnit
 #' @importFrom EnrichedHeatmap EnrichedHeatmap
 #' @importFrom circlize colorRamp2
 #' @importFrom utils read.table write.table setTxtProgressBar
