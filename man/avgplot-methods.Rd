@@ -6,10 +6,10 @@
 \alias{avgplot,matlist,chip,info-method}
 \title{Plot average coverage signals stratified by clusters and by individual/groupled samples}
 \usage{
-avgplot(matlist.obj, chip.obj, info.obj, pngfoutFe, pngfoutSm)
+avgplot(matlist.obj, chip.obj, info.obj, pdffoutFe, pdffoutSm)
 
 \S4method{avgplot}{matlist,chip,info}(matlist.obj, chip.obj, info.obj,
-  pngfoutFe, pngfoutSm)
+  pdffoutFe, pdffoutSm)
 }
 \arguments{
 \item{matlist.obj}{A \code{matlist} object}
@@ -18,9 +18,9 @@ avgplot(matlist.obj, chip.obj, info.obj, pngfoutFe, pngfoutSm)
 
 \item{info.obj}{An \code{info} object}
 
-\item{pngfoutFe}{An png graph of average plot stratified by clusters}
+\item{pdffoutFe}{An pdf graph of average plot stratified by clusters}
 
-\item{pngfoutSm}{An png graph of average plot stratified by individual/groupled samples}
+\item{pdffoutSm}{An pdf graph of average plot stratified by individual/groupled samples}
 }
 \value{
 No object

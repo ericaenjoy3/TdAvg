@@ -6,9 +6,9 @@
 \alias{tdplot,matlist,chip,info-method}
 \title{Plot a tornado plot}
 \usage{
-tdplot(matlist.obj, chip.obj, info.obj, pngfout)
+tdplot(matlist.obj, chip.obj, info.obj, pdffout)
 
-\S4method{tdplot}{matlist,chip,info}(matlist.obj, chip.obj, info.obj, pngfout)
+\S4method{tdplot}{matlist,chip,info}(matlist.obj, chip.obj, info.obj, pdffout)
 }
 \arguments{
 \item{matlist.obj}{A \code{matlist} object}
@@ -17,7 +17,7 @@ tdplot(matlist.obj, chip.obj, info.obj, pngfout)
 
 \item{info.obj}{An \code{info} object}
 
-\item{pngfout}{An output png file for the tornado plot}
+\item{pdffout}{An output pdf file for the tornado plot}
 }
 \value{
 No object
