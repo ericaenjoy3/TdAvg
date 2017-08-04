@@ -3,7 +3,6 @@
 #' @import RColorBrewer
 #' @import ggplot2
 #' @import dplyr
-#' @import multiplot
 #' @import methods
 #' @importFrom data.table fread rbindlist setnames melt data.table .I .N .SD
 #' @importFrom rlang .data
