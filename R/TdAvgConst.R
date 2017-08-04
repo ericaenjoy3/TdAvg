@@ -28,7 +28,7 @@ matlistConst<-function(config) {
   } else if (any(grepl("bowtie2",dat[,1]))) {
     expression("Read Density (RPKM)")
   } else {
-    expression(paste0(log[2]," (IP/INPUT)"))
+    expression(paste(log[2],"(IP/INPUT)"))
   }
   return(new("matlist",ll=mat.list,ylab=ylab))
 }
