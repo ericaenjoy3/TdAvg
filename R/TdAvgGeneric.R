@@ -5,7 +5,7 @@
 #' @description order clusters in the 4th col of bed file based on a configuration file with 1 column of ordered clusters.
 #' @param obj A \code{chip} object.
 #' @param orderconfig An order configruation file (character).
-#' @return An \code{info} object.
+#' @return A list of an level-order changed \code{chip} object and an \code{info} object.
 #' @export orderClus
 setGeneric(name="orderClus",
   def=function(obj,orderconfig){

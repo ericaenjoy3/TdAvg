@@ -16,7 +16,7 @@ orderClus(obj, orderconfig)
 \item{orderconfig}{An order configruation file (character).}
 }
 \value{
-An \code{info} object.
+A list of an level-order changed \code{chip} object and an \code{info} object.
 }
 \description{
 order clusters in the 4th col of bed file based on a configuration file with 1 column of ordered clusters.

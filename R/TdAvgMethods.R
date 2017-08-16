@@ -3,9 +3,11 @@
 setMethod(f="orderClus",
   signature="chip",
   definition=function(obj,orderconfig){
-    ord=read.table(orderconfig,header=FALSE,as.is=TRUE)[,1]
-    ord.idx=order(match(as.character(obj@bed[,4]),ord))
-    return(new("info",kpt.idx=rep(TRUE,nrow(obj@bed)),ord.idx=as.integer(ord.idx)))
+    ord <- read.table(orderconfig, header = FALSE, as.is = TRUE)[,1]
+    ord.idx <- order(match(as.character(obj@bed[,4]), ord))
+    info.obj <- new("info",kpt.idx=rep(TRUE,nrow(obj@bed)),ord.idx = as.integer(ord.idx))
+    obj@bed[,4] <- factor(as.character(obj@bed[,4]), levels=ord)
+    return(list(chip.obj = obj, info.obj = info.obj))
   }
 )
 
