@@ -228,7 +228,7 @@ setMethod(f="avgplot",
 #' @rdname tdplot-method
 setMethod(f="tdplot",
   signature=c("matlist","chip","info"),
-  def=function(matlist.obj, chip.obj, info.obj, pdffout) {
+  def=function(matlist.obj, chip.obj, info.obj, pngfout) {
     size<-info.obj@w
     axis_name<- if (floor(size/1000)>0) {
         c(paste0("-",size/1000," kb"),"0",paste0(size/1000," kb"))
@@ -262,7 +262,7 @@ setMethod(f="tdplot",
   c("white", "red")), name=names(sml)[j], column_title=names(sml)[j], axis_name=axis_name,heatmap_legend_param = list(color_bar="continuous"))
       }
     }
-    pdf(pdffout)
+    png(pngfout,width=max(3000,700*length(sml)),height=3000,res=300)
     draw(ht_list)
     dev.off()
   }

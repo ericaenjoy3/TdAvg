@@ -268,11 +268,11 @@ setGeneric(name="avgplot",
 #' @param matlist.obj A \code{matlist} object
 #' @param chip.obj A \code{chip} object
 #' @param info.obj An \code{info} object
-#' @param pdffout An output pdf file for the tornado plot
+#' @param pngfout An output png file for the tornado plot
 #' @return No object
 #' @export tdplot
 setGeneric(name="tdplot",
-  def=function(matlist.obj, chip.obj, info.obj, pdffout) {
+  def=function(matlist.obj, chip.obj, info.obj, pngfout) {
     standardGeneric("tdplot")
   }
 )
