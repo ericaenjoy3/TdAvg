@@ -66,7 +66,6 @@ setMethod(f="orderbyIntIdx",
 setMethod(f="rmSmallClus",
   signature=c("info","chip"),
   definition=function(info.obj,chip.obj) {
-    browser()
     ori.idx<-returnIntIdx(info.obj)
     dat<-data.table(chip.obj@bed[,4][ori.idx])
     setnames(dat,"grp")
