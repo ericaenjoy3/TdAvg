@@ -3,12 +3,12 @@
 \docType{methods}
 \name{rmSmallClus}
 \alias{rmSmallClus}
-\alias{rmSmallClus,chip,info-method}
+\alias{rmSmallClus,info,chip-method}
 \title{remove small (size<1000) clusters}
 \usage{
 rmSmallClus(info.obj, chip.obj)
 
-\S4method{rmSmallClus}{chip,info}(info.obj, chip.obj)
+\S4method{rmSmallClus}{info,chip}(info.obj, chip.obj)
 }
 \arguments{
 \item{info.obj}{An \code{info} object}
