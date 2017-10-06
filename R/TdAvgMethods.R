@@ -69,7 +69,7 @@ setMethod(f="rmSmallClus",
     ori.idx<-returnIntIdx(info.obj)
     dat<-data.table(chip.obj@bed[,4][ori.idx])
     setnames(dat,"grp")
-    int.idx<-dat[,.I[.N>1000],by=.data$grp]$V1
+    int.idx<-dat[,.I[.N>1000],by=grp]$V1
     info.obj<-subsetbyIntIdx(info.obj,int.idx)
     validObject(info.obj)
     return(info.obj)

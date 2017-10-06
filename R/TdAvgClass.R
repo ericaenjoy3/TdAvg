@@ -63,8 +63,8 @@ info<-setClass(
     if(length(object@ord.idx)==0) {
       return("ord.idx is of length 0.")
     }
-    if(length(object@kpt.idx)>0 && length(object@ord.idx)>0 && sum(object@kpt.idx)!=length(object@ord.idx)) {
-      return("TRUE kpt.idx does not equal in length to ord.idx.")
+    if(length(object@kpt.idx)>0 && length(object@ord.idx)>0 && length(object@kpt.idx)!=length(object@ord.idx)) {
+      return("The length of kpt.idx does not equal to the length of ord.idx.")
     }
     return(TRUE)
   }
