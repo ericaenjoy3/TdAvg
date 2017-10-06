@@ -68,6 +68,7 @@ setMethod(f="rmSmallClus",
   definition=function(info.obj,chip.obj) {
     ori.idx<-returnIntIdx(info.obj)
     dat<-data.table(chip.obj@bed[,4][ori.idx])
+    browser()
     setnames(dat,"grp")
     int.idx<-dat[,.I[.N>1000],by=.data$grp]$V1
     info.obj<-subsetbyIntIdx(info.obj,int.idx)
