@@ -36,7 +36,8 @@ setMethod(f="subsetbyIntIdx",
   definition=function(obj,IntIdx) {
     stopifnot(sum(obj@kpt.idx) >= length(IntIdx))
     stopifnot(sum(obj@kpt.idx) >= max(IntIdx))
-    obj@kpt.idx[obj@kpt.idx][seq_len(sum(obj@kpt.idx)) %in% IntIdx] <- FALSE
+    ori.idx <- returnIntIdx(info.obj)
+    obj@kpt.idx[obj@kpt.idx][ori.idx][IntIdx] <- FALSE
     return(obj)
   }
 )
@@ -63,26 +64,27 @@ setMethod(f="orderbyIntIdx",
 )
 
 #' @rdname rmSmallClus-methods
-setMethod(f="rmSmallClus",
-  signature=c("info","chip"),
-  definition=function(info.obj,chip.obj) {
-    ori.idx<-returnIntIdx(info.obj)
-    dat<-data.table(chip.obj@bed[,4][ori.idx])
-    setnames(dat,"grp")
-    int.idx<-dat[,.I[.N>1000],by=grp]$V1
-    info.obj<-subsetbyIntIdx(info.obj,int.idx)
+setMethod(f = "rmSmallClus",
+  signature = c("info","chip"),
+  definition = function(info.obj, chip.obj) {
+    ori.idx <- returnIntIdx(info.obj)
+    clus.list <- split(chip.obj@bed[ori.idx, 4], chip.obj@bed[ori.idx, 4])
+    clus.nms <- names(clus.list)[sapply(clus, length) < 1000]
+    int.idx <- which(as.character(chip.obj@bed[ori.idx, 4]) %in% clus.nms)
+    browser()
+    info.obj <- subsetbyIntIdx(info.obj, int.idx)
     validObject(info.obj)
     return(info.obj)
   }
 )
 
 #' @rdname outliers-methods
-setMethod(f="outliers",
-  signature=c("info","chip","matlist"),
-  definition=function(info.obj,chip.obj,matlist.obj){
-    idx<-returnIntIdx(info.obj)
-    outliers<-rowSums(sapply(seq_along(matlist.obj@ll),function(i,matlist.obj,idx)rowSums(is.na(matlist.obj@ll[[i]][idx,])),matlist.obj=matlist.obj,idx=idx))>0
-    info.obj<-subsetbyBoolIdx(info.obj,!outliers)
+setMethod(f = "outliers",
+  signature = c("info","chip","matlist"),
+  definition = function(info.obj, chip.obj, matlist.obj){
+    idx <- returnIntIdx(info.obj)
+    outliers <- rowSums(sapply(seq_along(matlist.obj@ll), function(i, matlist.obj, idx)rowSums(is.na(matlist.obj@ll[[i]][idx, ])), matlist.obj = matlist.obj, idx = idx))>0
+    info.obj <- subsetbyBoolIdx(info.obj, !outliers)
     return(info.obj)
   }
 )
