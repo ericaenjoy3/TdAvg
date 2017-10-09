@@ -2,52 +2,55 @@
 #' @rdname orderClus-methods
 setMethod(f="orderClus",
   signature="chip",
-  definition=function(obj,orderconfig){
+  definition=function(obj, orderconfig){
     ord <- read.table(orderconfig, header = FALSE, as.is = TRUE)[,1]
     ord.idx <- order(match(as.character(obj@bed[,4]), ord))
-    info.obj <- new("info",kpt.idx=rep(TRUE,nrow(obj@bed)),ord.idx = as.integer(ord.idx))
+    info.obj <- new("info", ord.idx = as.integer(ord.idx))
     obj@bed[,4] <- factor(as.character(obj@bed[,4]), levels=ord)
     return(list(chip.obj = obj, info.obj = info.obj))
   }
 )
 
 #' @rdname appendInfo-methods
-setMethod(f="appendInfo",
-  signature="info",
-  definition=function(obj,w,s){
-    obj@w<-w
-    obj@s<-s
-    obj@points<-seq(-w+s/2,w-s/2,s)
+setMethod(f = "appendInfo",
+  signature = "info",
+  definition = function(obj, w, s){
+    obj@w <- w
+    obj@s <- s
+    obj@points <- seq(-w+s/2, w-s/2, s)
     return(obj)
   }
 )
 
 #' @rdname returnIntIdx-methods
-setMethod(f="returnIntIdx",
-  signature="info",
-  definition=function(obj) {
-    return(obj@ord.idx[obj@kpt.idx])
+setMethod(f = "returnIntIdx",
+  signature = "info",
+  definition = function(obj) {
+    return(obj@ord.idx)
   }
 )
 
-#' @rdname subsetbyIntIdx-methods
-setMethod(f="subsetbyIntIdx",
-  signature="info",
-  definition=function(obj,IntIdx) {
-    stopifnot(sum(obj@kpt.idx) >= length(IntIdx))
-    stopifnot(sum(obj@kpt.idx) >= max(IntIdx))
-    ori.idx <- returnIntIdx(info.obj)
-    obj@kpt.idx[obj@kpt.idx][ori.idx][IntIdx] <- FALSE
+#' @rdname subsetbyIdx-methods
+setMethod(f = "subsetbyIntIdx",
+  signature = c("info", "numeric", "logical"),
+  definition = function(obj, IntIdx, invert) {
+    stopifnot(length(obj@ord.idx) >= max(IntIdx))
+    stopifnot(length(obj@ord.idx) >= length(IntIdx))
+    obj@ord.idx <- if (invert) {
+      obj@ord.idx[!seq_along(obj@ord.idx) %in% IntIdx]
+    } else {
+      obj@ord.idx[IntIdx]
+    }
     return(obj)
   }
 )
 
 #' @rdname subsetbyBoolIdx-methods
-setMethod(f="subsetbyBoolIdx",
-  signature="info",
-  definition=function(obj,BoolIdx) {
-    stopifnot(sum(obj@kpt.idx)==length(BoolIdx))
-    obj@kpt.idx[obj@kpt.idx][!BoolIdx] <- FALSE
+setMethod(f = "subsetbyBoolIdx",
+  signature = c("info", "logical", "logical"),
+  definition = function(obj, BoolIdx, invert) {
+    IntIdx <- which(BoolIdx)
+    obj <- subsetbyIntIdx(obj, IntIdx, invert)
     return(obj)
   }
 )
@@ -55,10 +58,10 @@ setMethod(f="subsetbyBoolIdx",
 #' @rdname orderbyIntIdx-methods
 setMethod(f="orderbyIntIdx",
   signature="info",
-  definition=function(obj,IntIdx) {
-    ori.idx<-returnIntIdx(obj)
-    stopifnot(length(obj@ord.idx[obj@kpt.idx])==length(IntIdx))
-    obj@ord.idx[obj@kpt.idx]<-obj@ord.idx[obj@kpt.idx][IntIdx]
+  definition=function(obj, IntIdx) {
+    ori.idx <- returnIntIdx(obj)
+    stopifnot(length(ori.idx) == length(IntIdx))
+    obj@ori.idx <- IntIdex
     return(obj)
   }
 )
@@ -69,10 +72,9 @@ setMethod(f = "rmSmallClus",
   definition = function(info.obj, chip.obj) {
     ori.idx <- returnIntIdx(info.obj)
     clus.list <- split(chip.obj@bed[ori.idx, 4], chip.obj@bed[ori.idx, 4])
-    clus.nms <- names(clus.list)[sapply(clus, length) < 1000]
+    clus.nms <- names(clus.list)[sapply(clus.list, length) < 1000]
     int.idx <- which(as.character(chip.obj@bed[ori.idx, 4]) %in% clus.nms)
-    browser()
-    info.obj <- subsetbyIntIdx(info.obj, int.idx)
+    info.obj <- subsetbyIntIdx(info.obj, int.idx, invert = TRUE)
     validObject(info.obj)
     return(info.obj)
   }
@@ -80,101 +82,112 @@ setMethod(f = "rmSmallClus",
 
 #' @rdname outliers-methods
 setMethod(f = "outliers",
-  signature = c("info","chip","matlist"),
+  signature = c("info", "chip", "matlist"),
   definition = function(info.obj, chip.obj, matlist.obj){
     idx <- returnIntIdx(info.obj)
-    outliers <- rowSums(sapply(seq_along(matlist.obj@ll), function(i, matlist.obj, idx)rowSums(is.na(matlist.obj@ll[[i]][idx, ])), matlist.obj = matlist.obj, idx = idx))>0
-    info.obj <- subsetbyBoolIdx(info.obj, !outliers)
+    outliers <- rowSums(sapply(seq_along(matlist.obj@ll), function(i, matlist.obj, idx)
+      rowSums(is.na(matlist.obj@ll[[i]][idx, ])), matlist.obj = matlist.obj, idx = idx))>0
+    info.obj <- subsetbyBoolIdx(info.obj, !outliers, invert = FALSE)
     return(info.obj)
   }
 )
 
 #' @rdname updateClus-methods
-setMethod(f="updateClus",
-  signature=c("chip"),
-  definition=function(chip.obj,IntIdx,subclus) {
-    stopifnot(length(IntIdx)==length(subclus))
-    ss<-as.character(chip.obj@bed[,4])
-    ss[IntIdx]<-as.character(subclus)
-    ss<-factor(ss)
-    chip.obj@bed[,4]<-ss
+setMethod(f = "updateClus",
+  signature = c("chip"),
+  definition = function(chip.obj, IntIdx, subclus) {
+    stopifnot(length(IntIdx) == length(subclus))
+    ss <- as.character(chip.obj@bed[,4])
+    ss[IntIdx] <- as.character(subclus)
+    ss[!seq_along(ss) %in% IntIdx] <- "NA"
+    ss <- factor(ss, levels = unique(subclus))
+    chip.obj@bed[,4] <- ss
     return(chip.obj)
   }
 )
 
 #' @rdname clusterR-methods
-setMethod(f="clusterR",
-  signature=c("chip","info","matlist"),
-  definition=function(chip.obj,info.obj,matlist.obj,nms) {
-    idx<-returnIntIdx(info.obj)
-    group<-chip.obj@bed[idx,4]
-    median.col<-floor(median(seq_len(ncol(matlist.obj@ll[[1]]))))
-    mat.list<-lapply(matlist.obj@ll,function(mat,median.col,idx){mat[idx,median.col]},median.col=median.col,idx=idx)
-    mat<-do.call("cbind",mat.list)
-    stopifnot(nrow(mat)==length(group))
-    if (length(levels(group))==1) {
-      mat.list<-list(mat);
-      names(mat.list)<-levels(group)
+setMethod(f = "clusterR",
+  signature = c("chip", "info", "matlist"),
+  definition = function(chip.obj, info.obj, matlist.obj, nms) {
+    idx <- returnIntIdx(info.obj)
+    group <- chip.obj@bed[idx, 4]
+    median.col <- floor(median(seq_len(ncol(matlist.obj@ll[[1]]))))
+    mat.list <- lapply(matlist.obj@ll, function(mat, median.col, idx){
+      mat[idx, median.col]
+     }, median.col = median.col, idx = idx)
+    mat <- do.call("cbind", mat.list)
+    stopifnot(nrow(mat) == length(group))
+    if (length(levels(group)) == 1) {
+      mat.list <- list(mat);
+      names(mat.list) <- levels(group)
     } else {
-      mat.list<-split(mat,group)
+      mat.list <- split(mat, group)
     }
-    clus.list<-lapply(seq_along(mat.list),
+    mem.list <- lapply(seq_along(mat.list),
       function(i,nms){
-        mat<-mat.list[[i]]
-        pdf(paste0(nms,"_",names(mat.list)[i],".pdf"))
-        opt<-Optimal_Clusters_KM(mat, max_clusters = min(10,ncol(mat)), plot_clusters=TRUE,criterion = 'distortion_fK', fK_threshold = 0.85,initializer = 'optimal_init', tol_optimal_init = 0.2)
+        mat <- mat.list[[i]]
+        pdf(paste0(nms, "_", names(mat.list)[i], ".pdf"))
+        opt<-Optimal_Clusters_KM(mat, max_clusters = min(10,ncol(mat)),
+          plot_clusters = TRUE, criterion = 'distortion_fK', fK_threshold = 0.85,
+          initializer = 'optimal_init', tol_optimal_init = 0.2)
         dev.off()
-        km_mb<-MiniBatchKmeans(mat, clusters = opt, batch_size = 20, num_init = 5, max_iters = 100,
-        init_fraction = 0.2, initializer = 'kmeans++', early_stop_iter = 10,verbose = F)
-        pr_mb<-predict_MBatchKMeans(mat, km_mb$centroids)
-        return(paste(names(mat.list)[i],pr_mb,sep="_"))
-      },nms=nms)
-    clus<-factor(unsplit(clus.list,group))
-    chip.obj<-updateClus(chip.obj,idx,clus)
-    return(chip.obj)
+        km_mb <- MiniBatchKmeans(mat, clusters = opt, batch_size = 20, num_init = 5,
+          max_iters = 100, init_fraction = 0.2, initializer = 'kmeans++', early_stop_iter = 10,
+          verbose = F)
+        pr_mb <- predict_MBatchKMeans(mat, km_mb$centroids)
+        return(as.numeric(pr_mb))
+      }, nms = nms)
+    mem <- unsplit(mem.list, group)
+    labels <- paste(as.character(group), mem, sep = "_")
+    clus <- factor(labels, levels = unique(labels))
+    chip.obj <- updateClus(chip.obj, idx, clus)
+    info.obj <- orderbyIntIdx(info.obj, order(as.numeric(chip.obj@bed[idx, 4]), mem))
+    return(list(chip.obj, info.obj))
   }
 )
 
 #' @rdname reord-methods
 setMethod(f="reord",
   signature=c("info","chip","matlist"),
-  definition=function(info.obj,chip.obj,matlist.obj){
-    idx<-returnIntIdx(info.obj)
-    rowS<-rowSums(sapply(seq_along(matlist.obj@ll),function(i,matlist.obj,idx){rowSums(matlist.obj@ll[[i]][idx,])},matlist.obj=matlist.obj,idx=idx)) # rowSums
-    info.obj<-orderbyIntIdx(info.obj,order(as.numeric(chip.obj@bed[idx,4]),-rowS))
+  definition=function(info.obj, chip.obj, matlist.obj){
+    idx <- returnIntIdx(info.obj)
+    rowS <- rowSums(sapply(seq_along(matlist.obj@ll), function(i, matlist.obj, idx){
+      rowSums(matlist.obj@ll[[i]][idx,])}, matlist.obj = matlist.obj, idx = idx)) # rowSums
+    info.obj <- orderbyIntIdx(info.obj, order(as.numeric(chip.obj@bed[idx, 4]),-rowS))
     return(info.obj)
   }
 )
 
 #' @rdname updateChip-methods
 setMethod(f="updateChip",
-  signature=c("chip","info"),
-  definition=function(chip.obj,info.obj){
-    idx<-returnIntIdx(info.obj)
+  signature=c("chip", "info"),
+  definition=function(chip.obj, info.obj){
+    idx <- returnIntIdx(info.obj)
     stopifnot(length(idx)>0)
-    chip.obj@bed<-chip.obj@bed[idx,]
-    chip.obj@bed[,4]<-droplevels(chip.obj@bed[,4])
+    chip.obj@bed <- chip.obj@bed[idx,]
+    chip.obj@bed[,4] <- droplevels(chip.obj@bed[,4])
     return(chip.obj)
   }
 )
 
 #' @rdname updateMatlist-methods
 setMethod(f="updateMatlist",
-  signature=c("matlist","info"),
-  definition=function(matlist.obj,info.obj){
-    idx<-returnIntIdx(info.obj)
+  signature=c("matlist", "info"),
+  definition=function(matlist.obj, info.obj){
+    idx <- returnIntIdx(info.obj)
     stopifnot(length(idx)>0)
-    matlist.obj@ll<-lapply(matlist.obj@ll,function(mat){mat[idx,]})
+    matlist.obj@ll <- lapply(matlist.obj@ll, function(mat){mat[idx, ]})
     return(matlist.obj)
   }
 )
 
 #' @rdname writeChip-methods
-setMethod(f="writeChip",
-  signature=c("chip"),
-  definition=function(chip.obj,fout) {
+setMethod(f = "writeChip",
+  signature = c("chip", "character"),
+  definition=function(chip.obj, fout) {
     stopifnot(file.info(dirname(fout))$isdir)
-    write.table(chip.obj@bed,file=fout,row.names=FALSE,col.names=FALSE,quote=FALSE,sep="\t")
+    write.table(chip.obj@bed, file = fout, row.names = FALSE, col.names = FALSE, quote = FALSE, sep = "\t")
     return(invisible(NULL))
   }
 )

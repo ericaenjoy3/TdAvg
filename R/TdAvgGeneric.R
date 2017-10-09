@@ -45,8 +45,7 @@ setGeneric(name="returnIntIdx",
 #' @name subsetbyIntIdx
 #' @rdname subsetbyIntIdx-methods
 #' @description Filter peaks to keep or discard.
-#' Set certain TRUE values of kpt.idx of an \code{info} object to FALSE
-#' identified by the integer specified in IntIdx.
+#' Order of full/subset of original bed rows specified in the integer specified in IntIdx.
 #' The function raises an error,
 #' if the length of index vector is longer or equal to the number of peaks to be kpt.
 #' The function also raises an error,
@@ -56,7 +55,7 @@ setGeneric(name="returnIntIdx",
 #' @return An updated \code{info} object
 #' @export subsetbyIntIdx
 setGeneric(name="subsetbyIntIdx",
-  def=function(obj,IntIdx){
+  def=function(obj, IntIdx, invert){
     standardGeneric("subsetbyIntIdx")
   }
 )
@@ -74,7 +73,7 @@ setGeneric(name="subsetbyIntIdx",
 #' @return An updated \code{info} object
 #' @export subsetbyBoolIdx
 setGeneric(name="subsetbyBoolIdx",
-  def=function(obj,BoolIdx){
+  def=function(obj, BoolIdx, invert){
     standardGeneric("subsetbyBoolIdx")
   }
 )

@@ -6,10 +6,11 @@
 #' @param chipF a ChIP-seq bed file
 #' @return A \code{chip} object
 #' @export chipConst
-chipConst<-function(chipF) {
-  dat<-data.frame(fread(chipF,header=FALSE,col.names=c("chr","start","end","clus"))[,1:4,with=FALSE]);
-  dat[,4]=factor(dat[,4])
-  return(new("chip",bed=dat))
+chipConst <- function(chipF) {
+  dat <- data.frame(fread(chipF, header = FALSE,
+    col.names = c("chr", "start", "end", "clus"))[, 1:4, with=FALSE]);
+  dat[,4] <- as.character(dat[,4])
+  return(new("chip", bed = dat))
 }
 
 #' @title construct an \code{matlist} object

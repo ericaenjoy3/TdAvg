@@ -41,30 +41,22 @@ chip <- setClass(
 #' @name info-class
 #' @rdname info-class
 #' @description Store
-#' index of peaks to keep (boolean kpt.idx),
-#' order for plotting (integer ord.idx),
+#' order for plotting and filtering (integer ord.idx),
 #' to use for return index, filter order of peaks (ord.idx) by whether to keep (kpt.idx)
 #' width of up/down-stream window (integer w),
 #' step size within the window (integer s),
 #' coordinates of data collected with reference to window center (numeric points).
-#' @slot kpt.idx logical object represeting ChIP-seq peaks to keep.
-#' @slot ord.idx integer object represeting order of ChIP-seq peaks to plot in the Tornado plot.
+#' @slot ord.idx integer object represeting order of (subset of)ChIP-seq peaks to plot in the Tornado plot.
 #' @slot w integer object representing number of basepairs flanking the middle of intervals for plotting.
 #' @slot s integer object representing every n'th basepairs to sample data values.
 #' @slot points numeric object representing coordinates in basepairs with reference to the mid-point of interval for data collected.
 #' @exportClass info
 info<-setClass(
   "info",
-  slots=c(kpt.idx="logical",ord.idx="integer",w="integer",s="integer",points="numeric"),
+  slots=c(ord.idx="integer",w="integer",s="integer",points="numeric"),
   validity=function(object){
-    if(length(object@kpt.idx)==0) {
-      return("kpt.idx is of length 0.")
-    }
     if(length(object@ord.idx)==0) {
       return("ord.idx is of length 0.")
-    }
-    if(length(object@kpt.idx)>0 && length(object@ord.idx)>0 && length(object@kpt.idx)!=length(object@ord.idx)) {
-      return("The length of kpt.idx does not equal to the length of ord.idx.")
     }
     return(TRUE)
   }
