@@ -14,6 +14,8 @@ subsetbyIntIdx(obj, IntIdx, invert)
 \item{obj}{An \code{info} object}
 
 \item{IntIdx}{An integer/numeric vector specifying index of currently kept peaks to be filtered out from the current point.}
+
+\item{invert}{when TRUE, specifies selecting the rows, or otherwise FALSE, specifies the complement rows.}
 }
 \value{
 An updated \code{info} object

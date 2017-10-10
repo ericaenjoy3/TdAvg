@@ -52,6 +52,7 @@ setGeneric(name="returnIntIdx",
 #' if the max integer position is larger than the lagest indexable postion of peaks to be kpt.
 #' @param obj An \code{info} object
 #' @param IntIdx An integer/numeric vector specifying index of currently kept peaks to be filtered out from the current point.
+#' @param invert when TRUE, specifies selecting the rows, or otherwise FALSE, specifies the complement rows.
 #' @return An updated \code{info} object
 #' @export subsetbyIntIdx
 setGeneric(name="subsetbyIntIdx",
@@ -70,6 +71,7 @@ setGeneric(name="subsetbyIntIdx",
 #' FLASE values in BoolIdx specify of those currently kept peaks to be filtered out downstream.
 #' @param obj An \code{info} object
 #' @param BoolIdx A boolean vector of the length as the currently kpt peaks
+#' @param invert when TRUE, specifies selecting the rows, or otherwise FALSE, specifies the complement rows.
 #' @return An updated \code{info} object
 #' @export subsetbyBoolIdx
 setGeneric(name="subsetbyBoolIdx",

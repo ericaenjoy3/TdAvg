@@ -236,9 +236,9 @@ setMethod(f="avgplot",
     avg$variable <- as.numeric(as.character(avg$variable))
     theme_set(theme_grey(base_size=15))
     p1 <- ggplot(avg, aes_(x = ~variable, y = ~value, color = ~sm)) + geom_line(size=2)+labs(x = "",y = matlist.obj@ylab)+scale_x_continuous(breaks = c(-size,0,size), labels = axis_name)+theme(legend.title = element_blank(), panel.spacing = unit(2, "lines"), legend.position = "top")+facet_grid(.~grp)
-    ggsave(file = pdffoutFe, plot = p1)
+    ggsave(filename = pdffoutFe, plot = p1)
     p2 <- ggplot(avg, aes_(x = ~variable, y = ~value, color = ~grp)) + geom_line(size=2)+labs(x="",y = matlist.obj@ylab)+scale_x_continuous(breaks=c(-size, 0, size), labels = axis_name)+theme(legend.title = element_blank(),panel.spacing = unit(2, "lines"),legend.position = "top")+facet_grid(.~sm)
-    ggsave(file = pdffoutSm, plot = p2)
+    ggsave(filename = pdffoutSm, plot = p2)
   }
 )
 

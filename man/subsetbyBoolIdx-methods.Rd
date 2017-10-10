@@ -14,6 +14,8 @@ subsetbyBoolIdx(obj, BoolIdx, invert)
 \item{obj}{An \code{info} object}
 
 \item{BoolIdx}{A boolean vector of the length as the currently kpt peaks}
+
+\item{invert}{when TRUE, specifies selecting the rows, or otherwise FALSE, specifies the complement rows.}
 }
 \value{
 An updated \code{info} object
