@@ -6,7 +6,7 @@
 #' @import methods
 #' @importFrom data.table fread rbindlist setnames melt data.table .I .N .SD
 #' @importFrom rlang .data
-#' @importFrom grDevices dev.off pdf
+#' @importFrom grDevices dev.off pdf colorRamp
 #' @importFrom stats na.omit quantile median
 #' @importFrom graphics plot axis abline text par mtext
 #' @importFrom ComplexHeatmap Heatmap draw

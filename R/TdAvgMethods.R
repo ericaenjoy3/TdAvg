@@ -30,7 +30,7 @@ setMethod(f = "returnIntIdx",
   }
 )
 
-#' @rdname subsetbyIdx-methods
+#' @rdname subsetbyIntIdx-methods
 setMethod(f = "subsetbyIntIdx",
   signature = c("info", "numeric", "logical"),
   definition = function(obj, IntIdx, invert) {
@@ -56,12 +56,12 @@ setMethod(f = "subsetbyBoolIdx",
 )
 
 #' @rdname orderbyIntIdx-methods
-setMethod(f="orderbyIntIdx",
-  signature="info",
-  definition=function(obj, IntIdx) {
-    ori.idx <- returnIntIdx(obj)
-    stopifnot(length(ori.idx) == length(IntIdx))
-    obj@ori.idx <- IntIdex
+setMethod(f = "orderbyIntIdx",
+  signature = "info",
+  definition = function(obj, IntIdx) {
+    ord.idx <- returnIntIdx(obj)
+    stopifnot(length(ord.idx) == length(IntIdx))
+    obj@ord.idx <- IntIdx
     return(obj)
   }
 )
@@ -70,10 +70,10 @@ setMethod(f="orderbyIntIdx",
 setMethod(f = "rmSmallClus",
   signature = c("info","chip"),
   definition = function(info.obj, chip.obj) {
-    ori.idx <- returnIntIdx(info.obj)
-    clus.list <- split(chip.obj@bed[ori.idx, 4], chip.obj@bed[ori.idx, 4])
+    ord.idx <- returnIntIdx(info.obj)
+    clus.list <- split(chip.obj@bed[ord.idx, 4], chip.obj@bed[ord.idx, 4])
     clus.nms <- names(clus.list)[sapply(clus.list, length) < 1000]
-    int.idx <- which(as.character(chip.obj@bed[ori.idx, 4]) %in% clus.nms)
+    int.idx <- which(as.character(chip.obj@bed[ord.idx, 4]) %in% clus.nms)
     info.obj <- subsetbyIntIdx(info.obj, int.idx, invert = TRUE)
     validObject(info.obj)
     return(info.obj)
@@ -111,7 +111,7 @@ setMethod(f = "clusterR",
   signature = c("chip", "info", "matlist"),
   definition = function(chip.obj, info.obj, matlist.obj, nms) {
     idx <- returnIntIdx(info.obj)
-    group <- chip.obj@bed[idx, 4]
+    group <- droplevels(chip.obj@bed[idx, 4])
     median.col <- floor(median(seq_len(ncol(matlist.obj@ll[[1]]))))
     mat.list <- lapply(matlist.obj@ll, function(mat, median.col, idx){
       mat[idx, median.col]
@@ -119,10 +119,10 @@ setMethod(f = "clusterR",
     mat <- do.call("cbind", mat.list)
     stopifnot(nrow(mat) == length(group))
     if (length(levels(group)) == 1) {
-      mat.list <- list(mat);
+      mat.list <- list(data.frame(mat));
       names(mat.list) <- levels(group)
     } else {
-      mat.list <- split(mat, group)
+      mat.list <- split(data.frame(mat), group)
     }
     mem.list <- lapply(seq_along(mat.list),
       function(i,nms){
@@ -142,8 +142,8 @@ setMethod(f = "clusterR",
     labels <- paste(as.character(group), mem, sep = "_")
     clus <- factor(labels, levels = unique(labels))
     chip.obj <- updateClus(chip.obj, idx, clus)
-    info.obj <- orderbyIntIdx(info.obj, order(as.numeric(chip.obj@bed[idx, 4]), mem))
-    return(list(chip.obj, info.obj))
+    info.obj <- orderbyIntIdx(info.obj, order(as.numeric(group), mem))
+    return(list(chip.obj = chip.obj, info.obj = info.obj))
   }
 )
 
@@ -263,17 +263,30 @@ setMethod(f="tdplot",
     names(sml) <- names(matlist.obj@ll)
     grp <- chip.obj@bed[,4]
     options(expressions=500000)
-    if (length(unique(as.character(grp)))==1) {
+    if (length(unique(as.character(grp))) == 1) {
       ht_list <- NULL
     } else {
-      col1 <- if(length(levels(grp))<3) {brewer.pal(3, "Dark2")[1:2]} else if (length(levels(grp))>8) {brewer.pal(length(levels(grp)), "Paired")} else {brewer.pal(length(levels(grp)), "Dark2")}
-      ht_list <- Heatmap(as.character(grp), col = structure(col1,names = levels(grp)), name = "Groups", show_row_names = FALSE, show_column_names = FALSE, width = unit(3, "mm"),use_raster = FALSE,show_row_dend = FALSE,show_column_dend = FALSE, split = grp, combined_name_fun = NULL)
+      col1 <- if(length(levels(grp)) < 3) {
+          brewer.pal(3, "Dark2")[1:2]
+        } else if (length(levels(grp)) <= 8) {
+          brewer.pal(length(levels(grp)), "Dark2")
+        } else if (length(levels(grp)) <= 12) {
+          brewer.pal(length(levels(grp)), "Paired")
+        } else if (length(levels(grp)) > 12) {
+          colorRampPalette(brewer.pal(12, "Paired"))(length(levels(grp)))
+        }
+      ht_list <- Heatmap(as.character(grp), col = structure(col1,names = levels(grp)), name = "Groups",
+        show_row_names = FALSE, show_column_names = FALSE, width = unit(3, "mm"),
+        use_raster = FALSE, show_row_dend = FALSE, show_column_dend = FALSE, split = grp,
+        combined_name_fun = NULL)
     }
     rng=range(unlist(sml))
     for (j in 1:length(sml)) {
       if (j==1) {
         ht_list <- ht_list + EnrichedHeatmap(sml[[j]], col=colorRamp2(c(rng[1],rng[2]),
-  c("white", "red")), name=names(sml)[j], split=as.numeric(grp), row_title_rot=0,column_title=names(sml)[j], combined_name_fun=NULL, axis_name=axis_name,heatmap_legend_param = list(color_bar="continuous"))
+          c("white", "red")), name = names(sml)[j], split = as.numeric(grp), row_title_rot = 0,
+          column_title = names(sml)[j], combined_name_fun = NULL, axis_name = axis_name,
+          heatmap_legend_param = list(color_bar = "continuous"))
       } else {
         ht_list=ht_list+EnrichedHeatmap(sml[[j]], col=colorRamp2(c(rng[1],rng[2]),
   c("white", "red")), name=names(sml)[j], column_title=names(sml)[j], axis_name=axis_name,heatmap_legend_param = list(color_bar="continuous"))

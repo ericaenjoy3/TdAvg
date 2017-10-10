@@ -3,12 +3,12 @@
 \docType{methods}
 \name{writeChip}
 \alias{writeChip}
-\alias{writeChip,chip-method}
+\alias{writeChip,chip,character-method}
 \title{Output the \code{bed} slot of the \code{chip} object to file.}
 \usage{
 writeChip(chip.obj, fout)
 
-\S4method{writeChip}{chip}(chip.obj, fout)
+\S4method{writeChip}{chip,character}(chip.obj, fout)
 }
 \arguments{
 \item{chip.obj}{A \code{chip} object}

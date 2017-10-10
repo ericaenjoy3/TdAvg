@@ -9,7 +9,7 @@
 chipConst <- function(chipF) {
   dat <- data.frame(fread(chipF, header = FALSE,
     col.names = c("chr", "start", "end", "clus"))[, 1:4, with=FALSE]);
-  dat[,4] <- as.character(dat[,4])
+  dat[,4] <- as.factor(dat[,4])
   return(new("chip", bed = dat))
 }
 

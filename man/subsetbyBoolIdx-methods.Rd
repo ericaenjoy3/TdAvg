@@ -3,12 +3,12 @@
 \docType{methods}
 \name{subsetbyBoolIdx}
 \alias{subsetbyBoolIdx}
-\alias{subsetbyBoolIdx,info-method}
+\alias{subsetbyBoolIdx,info,logical,logical-method}
 \title{subset by boolean index}
 \usage{
-subsetbyBoolIdx(obj, BoolIdx)
+subsetbyBoolIdx(obj, BoolIdx, invert)
 
-\S4method{subsetbyBoolIdx}{info}(obj, BoolIdx)
+\S4method{subsetbyBoolIdx}{info,logical,logical}(obj, BoolIdx, invert)
 }
 \arguments{
 \item{obj}{An \code{info} object}

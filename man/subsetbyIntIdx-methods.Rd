@@ -3,12 +3,12 @@
 \docType{methods}
 \name{subsetbyIntIdx}
 \alias{subsetbyIntIdx}
-\alias{subsetbyIntIdx,info-method}
+\alias{subsetbyIntIdx,info,numeric,logical-method}
 \title{subset by integer index}
 \usage{
-subsetbyIntIdx(obj, IntIdx)
+subsetbyIntIdx(obj, IntIdx, invert)
 
-\S4method{subsetbyIntIdx}{info}(obj, IntIdx)
+\S4method{subsetbyIntIdx}{info,numeric,logical}(obj, IntIdx, invert)
 }
 \arguments{
 \item{obj}{An \code{info} object}
@@ -20,8 +20,7 @@ An updated \code{info} object
 }
 \description{
 Filter peaks to keep or discard.
-Set certain TRUE values of kpt.idx of an \code{info} object to FALSE
-identified by the integer specified in IntIdx.
+Order of full/subset of original bed rows specified in the integer specified in IntIdx.
 The function raises an error,
 if the length of index vector is longer or equal to the number of peaks to be kpt.
 The function also raises an error,
