@@ -61,7 +61,7 @@ setMethod(f = "orderbyIntIdx",
   definition = function(obj, IntIdx) {
     ord.idx <- returnIntIdx(obj)
     stopifnot(length(ord.idx) == length(IntIdx))
-    obj@ord.idx <- IntIdx
+    obj@ord.idx <- ord.idx[IntIdx]
     return(obj)
   }
 )
