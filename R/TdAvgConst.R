@@ -7,8 +7,8 @@
 #' @return A \code{chip} object
 #' @export chipConst
 chipConst <- function(chipF) {
-  dat <- data.frame(fread(chipF, header = FALSE,
-    col.names = c("chr", "start", "end", "clus"))[, 1:4, with=FALSE]);
+  dat <- read.table(chipF, header = FALSE, as.is = TRUE, sep = "\t")[, 1:4]
+  colnames(dat) <- c("chr", "start", "end", "clus")
   dat[,4] <- as.factor(dat[,4])
   return(new("chip", bed = dat))
 }
