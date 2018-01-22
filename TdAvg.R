@@ -30,10 +30,9 @@ stopifnot(length(args$nms)==length(args$fs))
 stopifnot(length(args$w)==length(args$s) & length(args$fs)==length(args$w))
 
 # update fs, repconfig, w, s, nms
-idx <- c(grep(args$tf,args$nms, ignore.case = TRUE), grep(args$tf, args$nms, ignore.case = TRUE, invert = TRUE))
-sapply(names(args)[sapply(args,length)>1],
-  function(m,idx){if(length(args[[m]])>1){args[[m]]<<-args[[m]][idx]};
-  invisible(NULL)}, idx = idx)
+idx <- c(grep(args$tf, args$nms, ignore.case = TRUE), grep(args$tf, args$nms, ignore.case = TRUE, invert = TRUE))
+invisible(sapply(names(args)[sapply(args,length)>1],
+  function(m,idx){if(length(args[[m]])>1){args[[m]]<<-args[[m]][idx]}}, idx = idx))
 
 # process chip bed
 chip.obj <- chipConst(args$chip)
@@ -83,6 +82,9 @@ for (i in seq_along(args$fs)) {
         pngfout = paste0(args$nms[i], "_TD.png"))
     }
   }
+  boxplot(nmatlist.obj, chip.obj, info.obj,
+    pdffout = paste0(args$nms[i], "_COMBbox.pdf",
+    fout = paste0(args$nms[i], "_COMBbox_pvalue.txt")
   avgplot(nmatlist.obj, chip.obj, info.obj,
     pdffoutFe = paste0(args$nms[i], "_COMBAvg.pdf"),
     pdffoutSm = paste0(args$nms[i], "_COMBAvgT.pdf"))

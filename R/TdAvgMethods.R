@@ -193,20 +193,20 @@ setMethod(f = "writeChip",
 )
 
 #' @rdname mergeRep-methods
-setMethod(f="mergeRep",
-  signature=c("matlist"),
-  definition=function(matlist.obj,repconfig){
-    dat=read.table(repconfig,header=FALSE,as.is=TRUE,sep="\t")
+setMethod(f = "mergeRep",
+  signature = c("matlist"),
+  definition = function(matlist.obj,repconfig){
+    dat <- read.table(repconfig, header = FALSE, as.is = TRUE, sep = "\t")
     if (identical(dat[,1],dat[,2])) {return(matlist.obj)}
-    cond=dat[,1]
-    names(cond)=dat[,2]
-    nmat.list=lapply(seq_along(unique(names(cond))), function(i){
-      nm=unique(names(cond))[i]
-      nmat=Reduce("+",matlist.obj@ll[cond[nm]])/length(cond[nm])
+    cond <- dat[,1]
+    names(cond) <- dat[,2]
+    nmat.list <- lapply(seq_along(unique(names(cond))), function(i){
+      nm <- unique(names(cond))[i]
+      nmat <- Reduce("+",matlist.obj@ll[cond[nm]])/length(cond[nm])
       return(nmat)
     })
-    names(nmat.list)=unique(names(cond))
-    matlist.obj@ll=nmat.list
+    names(nmat.list) <- unique(names(cond))
+    matlist.obj@ll <- nmat.list
     return(matlist.obj)
   }
 )
@@ -232,13 +232,38 @@ setMethod(f="avgplot",
     dd <- rbindlist(dd.list)
     avg <- dd[, lapply(.SD, mean, na.rm=TRUE), by="grp,sm", .SDcols=colnames(dd)[grep("grp|sm",colnames(dd),invert=TRUE)]]
     setnames(avg, c("grp","sm",dist) )
-    avg <- melt(avg,id.vars=c("grp","sm"))
+    avg <- melt(avg, id.vars=c("grp","sm"))
     avg$variable <- as.numeric(as.character(avg$variable))
     theme_set(theme_grey(base_size=15))
     p1 <- ggplot(avg, aes_(x = ~variable, y = ~value, color = ~sm)) + geom_line(size=2)+labs(x = "",y = matlist.obj@ylab)+scale_x_continuous(breaks = c(-size,0,size), labels = axis_name)+theme(legend.title = element_blank(), panel.spacing = unit(2, "lines"), legend.position = "top")+facet_grid(.~grp)
     ggsave(filename = pdffoutFe, plot = p1)
     p2 <- ggplot(avg, aes_(x = ~variable, y = ~value, color = ~grp)) + geom_line(size=2)+labs(x="",y = matlist.obj@ylab)+scale_x_continuous(breaks=c(-size, 0, size), labels = axis_name)+theme(legend.title = element_blank(),panel.spacing = unit(2, "lines"),legend.position = "top")+facet_grid(.~sm)
     ggsave(filename = pdffoutSm, plot = p2)
+  }
+)
+
+#' @rdname bplot-method
+setMethod(f = "bplot",
+  signature=c("matlist","chip","info"),
+  def=function(matlist.obj, chip.obj, info.obj, pdffout) {
+    # concentate the central signals
+    dat_list <- lapply(seq_along(matlist.obj@ll), function(i){
+      cidx <- ncol(matlist.obj@ll[[i]])/2
+      sm <- names(matlist.obj@ll)[i]
+      if (cidx %% 1 == 0) {
+        dat <- data.table(grp = gsub("_\\d$", "", sm), sm = sm, colMeans(matlist.obj@ll[[i]][cidx:(cidx+1),]))
+      } else {
+        #dat <- data.table(grp = gsub("_\\d$", "", sm), sm = sm, mat[cidx,])
+		dat <- data.table(grp = gsub("_\\d$", "", sm), sm = sm, matlist.obj@ll[[i]][cidx,])
+      }
+    })
+    dat <- rbindlist(dat_list)
+    setnames(dat, "V3", "value")
+    cmp <- data.table(combn(unique(dat[["sm"]]), 2))
+    p1 <- ggboxplot(dat, x = "sm", y = "value", color = "grp", palette = "jco", xlab = "", ylab = matlist.obj@ylab,
+      add = "jitter", legend.title = "")+
+      stat_compare_means(comparisons = cmp)
+    ggsave(filename = pdffout, plot = p1)
   }
 )
 

@@ -262,6 +262,22 @@ setGeneric(name="avgplot",
   }
 )
 
+#' @title Plot a box plot
+#' @name bplot
+#' @rdname bplot-method
+#' @description Plot a box plot
+#' @param matlist.obj A \code{matlist} object
+#' @param chip.obj A \code{chip} object
+#' @param info.obj An \code{info} object
+#' @param pdffout A pdf graph of boxplots
+#' @return No object
+setGeneric(name = "bplot",
+#' @export bplot
+  def = function(matlist.obj, chip.obj, info.obj, pdffout) {
+    standardGeneric("bplot")
+  }
+)
+
 #' @title Plot a tornado plot
 #' @name tdplot
 #' @rdname tdplot-method
