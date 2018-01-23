@@ -252,8 +252,8 @@ setGeneric(name="mergeRep",
 #' @param matlist.obj A \code{matlist} object
 #' @param chip.obj A \code{chip} object
 #' @param info.obj An \code{info} object
-#' @param pdffoutFe An pdf graph of average plot stratified by clusters
-#' @param pdffoutSm An pdf graph of average plot stratified by individual/groupled samples
+#' @param pdffoutFe A pdf graph of average plot stratified by clusters
+#' @param pdffoutSm A pdf graph of average plot stratified by individual/groupled samples
 #' @return No object
 #' @export avgplot
 setGeneric(name="avgplot",
@@ -269,11 +269,12 @@ setGeneric(name="avgplot",
 #' @param matlist.obj A \code{matlist} object
 #' @param chip.obj A \code{chip} object
 #' @param info.obj An \code{info} object
-#' @param pdffout A pdf graph of boxplots
+#' @param pdffoutFe A pdf graph of box/violin plot stratified by clusters
+#' @param pdffoutSm A pdf graph of box/violin plot stratified by individual/groupled samples
 #' @return No object
 setGeneric(name = "bplot",
 #' @export bplot
-  def = function(matlist.obj, chip.obj, info.obj, pdffout) {
+  def = function(matlist.obj, chip.obj, info.obj, pdffoutFe, pdffoutSm) {
     standardGeneric("bplot")
   }
 )
