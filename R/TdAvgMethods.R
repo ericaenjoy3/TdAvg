@@ -253,8 +253,7 @@ setMethod(f = "bplot",
       if (cidx %% 1 == 0) {
         dat <- data.table(grp = gsub("_\\d$", "", sm), sm = sm, colMeans(matlist.obj@ll[[i]][cidx:(cidx+1),]))
       } else {
-        #dat <- data.table(grp = gsub("_\\d$", "", sm), sm = sm, mat[cidx,])
-		dat <- data.table(grp = gsub("_\\d$", "", sm), sm = sm, matlist.obj@ll[[i]][cidx,])
+	dat <- data.table(grp = gsub("_\\d$", "", sm), sm = sm, matlist.obj@ll[[i]][cidx,])
       }
     })
     dat <- rbindlist(dat_list)
