@@ -6,9 +6,10 @@
 \alias{bplot,matlist,chip,info-method}
 \title{Plot a box plot}
 \usage{
-bplot(matlist.obj, chip.obj, info.obj, pdffout)
+bplot(matlist.obj, chip.obj, info.obj, pdffoutFe, pdffoutSm)
 
-\S4method{bplot}{matlist,chip,info}(matlist.obj, chip.obj, info.obj, pdffout)
+\S4method{bplot}{matlist,chip,info}(matlist.obj, chip.obj, info.obj, pdffoutFe,
+  pdffoutSm)
 }
 \arguments{
 \item{matlist.obj}{A \code{matlist} object}
@@ -17,7 +18,9 @@ bplot(matlist.obj, chip.obj, info.obj, pdffout)
 
 \item{info.obj}{An \code{info} object}
 
-\item{pdffout}{A pdf graph of boxplots}
+\item{pdffoutFe}{A pdf graph of box/violin plot stratified by clusters}
+
+\item{pdffoutSm}{A pdf graph of box/violin plot stratified by individual/groupled samples}
 }
 \value{
 No object

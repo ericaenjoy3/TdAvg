@@ -18,9 +18,9 @@ avgplot(matlist.obj, chip.obj, info.obj, pdffoutFe, pdffoutSm)
 
 \item{info.obj}{An \code{info} object}
 
-\item{pdffoutFe}{An pdf graph of average plot stratified by clusters}
+\item{pdffoutFe}{A pdf graph of average plot stratified by clusters}
 
-\item{pdffoutSm}{An pdf graph of average plot stratified by individual/groupled samples}
+\item{pdffoutSm}{A pdf graph of average plot stratified by individual/groupled samples}
 }
 \value{
 No object

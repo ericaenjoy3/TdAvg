@@ -4,7 +4,7 @@
 #' @import ggplot2
 #' @import dplyr
 #' @import methods
-#' @importFrom ggpubr ggboxplot stat_compare_means
+#' @importFrom ggpubr ggboxplot ggviolin stat_compare_means
 #' @importFrom data.table fread rbindlist setnames melt data.table .I .N .SD
 #' @importFrom rlang .data
 #' @importFrom grDevices dev.off pdf png colorRampPalette
