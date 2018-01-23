@@ -82,7 +82,7 @@ for (i in seq_along(args$fs)) {
         pngfout = paste0(args$nms[i], "_TD.png"))
     }
   }
-  boxplot(nmatlist.obj, chip.obj, info.obj,
+  bplot(nmatlist.obj, chip.obj, info.obj,
     pdffout = paste0(args$nms[i], "_COMBbox.pdf"))
   avgplot(nmatlist.obj, chip.obj, info.obj,
     pdffoutFe = paste0(args$nms[i], "_COMBAvg.pdf"),

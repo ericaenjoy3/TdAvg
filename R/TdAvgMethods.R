@@ -245,24 +245,31 @@ setMethod(f="avgplot",
 #' @rdname bplot-method
 setMethod(f = "bplot",
   signature=c("matlist","chip","info"),
-  def=function(matlist.obj, chip.obj, info.obj, pdffout) {
+  def=function(matlist.obj, chip.obj, info.obj, pdffoutFe, pdffoutSm) {
+    grp <- chip.obj@bed[,4]
     # concentate the central signals
     dat_list <- lapply(seq_along(matlist.obj@ll), function(i){
       cidx <- ncol(matlist.obj@ll[[i]])/2
       sm <- names(matlist.obj@ll)[i]
       if (cidx %% 1 == 0) {
-        dat <- data.table(grp = gsub("_\\d$", "", sm), sm = sm, colMeans(matlist.obj@ll[[i]][cidx:(cidx+1),]))
+        dat <- data.table(grp = grp, sm = sm, rowMeans(matlist.obj@ll[[i]][,cidx:(cidx+1)]))
       } else {
-	dat <- data.table(grp = gsub("_\\d$", "", sm), sm = sm, matlist.obj@ll[[i]][cidx,])
+	dat <- data.table(grp = grp, sm = sm, matlist.obj@ll[[i]][,cidx])
       }
     })
     dat <- rbindlist(dat_list)
     setnames(dat, "V3", "value")
+    cmp <- data.table(combn(unique(dat[["grp"]]), 2))
+    p1 <- ggviolin(dat, x = "grp", y = "value", color = "grp", palette = "jco", xlab = "", ylab = matlist.obj@ylab,
+      add = "boxplot", add.params = list(fill = "white"), legend.title = "", facet.by = "sm")+
+      stat_compare_means(comparison = cmp, method = "wilcox.test", label = "p.format", label.y.pnc = "bottom", label.size = 0.2)
+    ggsave(filename = pdffoutFe, plot = p1)
     cmp <- data.table(combn(unique(dat[["sm"]]), 2))
-    p1 <- ggboxplot(dat, x = "sm", y = "value", color = "grp", palette = "jco", xlab = "", ylab = matlist.obj@ylab,
-      add = "jitter", legend.title = "")+
-      stat_compare_means(comparisons = cmp)
-    ggsave(filename = pdffout, plot = p1)
+    p2 <- ggviolin(dat, x = "sm", y = "value", color = "sm", palette = "jco", xlab = "", ylab = matlist.obj@ylab,
+      add = "boxplot", add.params = list(fill = "white"), legend.title = "", facet.by = "grp")+
+      stat_compare_means(comparison = cmp, method = "wilcox.test", label = "p.format", label.y.npc = "bottom", label.size = 0.2)
+    ggsave(filename = pdffoutSm, plot = p2)
+
   }
 )
 
