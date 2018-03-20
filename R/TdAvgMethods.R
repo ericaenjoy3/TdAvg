@@ -264,13 +264,15 @@ setMethod(f = "bplot",
     	p1 <- ggviolin(dat, x = "grp", y = "value", color = "grp", palette = "jco", xlab = "", ylab = matlist.obj@ylab,
       		add = "boxplot", add.params = list(fill = "white"), legend.title = "", facet.by = "sm")+
       		stat_compare_means(comparison = cmp, method = "wilcox.test", label = "p.format", label.y.pnc = "bottom", label.size = 0.2)
+      p1 <- p1 + rotate_x_text(45)
     	ggsave(filename = pdffoutFe, plot = p1)
     }
     if (length(unique(dat[["sm"]])) > 1) {
-	cmp <- data.table(combn(unique(dat[["sm"]]), 2))
-    		p2 <- ggviolin(dat, x = "sm", y = "value", color = "sm", palette = "jco", xlab = "", ylab = matlist.obj@ylab,
+	    cmp <- data.table(combn(unique(dat[["sm"]]), 2))
+      p2 <- ggviolin(dat, x = "sm", y = "value", color = "sm", palette = "jco", xlab = "", ylab = matlist.obj@ylab,
       		add = "boxplot", add.params = list(fill = "white"), legend.title = "", facet.by = "grp")+
       		stat_compare_means(comparison = cmp, method = "wilcox.test", label = "p.format", label.y.npc = "bottom", label.size = 0.2)
+      p2 <- p2 + rotate_x_text(45)
     	ggsave(filename = pdffoutSm, plot = p2)	
     }
   }
